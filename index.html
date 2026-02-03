@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Demo Bot Concesionaria | Automia</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+background:linear-gradient(135deg,#0a1628 0%,#1a2744 100%);
+min-height:100vh;
+padding:15px;
+}
+.wrapper{
+max-width:400px;
+margin:0 auto;
+}
+.hero{
+text-align:center;
+margin-bottom:16px;
+color:white;
+}
+.hero h1{
+font-size:18px;
+margin-bottom:6px;
+line-height:1.3;
+}
+.hero p{
+font-size:11px;
+opacity:0.7;
+}
+.phone{
+background:#0b141a;
+border-radius:30px;
+padding:6px;
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+.screen{
+background:#0b141a;
+border-radius:25px;
+overflow:hidden;
+height:420px;
+display:flex;
+flex-direction:column;
+}
+.header{
+background:#202c33;
+padding:10px 12px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+.avatar{
+width:36px;
+height:36px;
+background:linear-gradient(135deg,#c9a227,#e8d5a3);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:16px;
+}
+.info h3{color:#e9edef;font-size:13px}
+.info p{color:#00d26a;font-size:10px}
+.messages{
+flex:1;
+padding:10px;
+overflow-y:auto;
+background:#111b21;
+}
+.msg{
+max-width:85%;
+padding:7px 10px;
+border-radius:10px;
+margin-bottom:5px;
+font-size:12px;
+line-height:1.4;
+word-wrap:break-word;
+}
+.msg.sent{
+background:#005c4b;
+color:#e9edef;
+margin-left:auto;
+border-bottom-right-radius:2px;
+}
+.msg.recv{
+background:#202c33;
+color:#e9edef;
+border-bottom-left-radius:2px;
+}
+.msg .t{
+font-size:8px;
+color:rgba(255,255,255,.3);
+text-align:right;
+margin-top:2px;
+}
+.input-area{
+background:#202c33;
+padding:8px 10px;
+display:flex;
+gap:8px;
+}
+.input-area input{
+flex:1;
+background:#2a3942;
+border:none;
+padding:9px 12px;
+border-radius:18px;
+color:#e9edef;
+font-size:13px;
+}
+.input-area input:focus{
+outline:none;
+background:#3a4952;
+}
+.input-area input::placeholder{color:#8696a0}
+.input-area button{
+background:linear-gradient(135deg,#00a884,#00d26a);
+border:none;
+width:36px;
+height:36px;
+border-radius:50%;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
+}
+.input-area button svg{
+fill:white;
+width:16px;
+height:16px;
+}
+.quick{
+display:flex;
+flex-wrap:wrap;
+gap:4px;
+justify-content:center;
+margin-top:10px;
+}
+.qbtn{
+background:rgba(255,255,255,.1);
+color:white;
+border:none;
+padding:6px 9px;
+border-radius:10px;
+cursor:pointer;
+font-size:10px;
+}
+.qbtn:hover{background:rgba(255,255,255,.2)}
+.qbtn:active{background:rgba(255,255,255,.3)}
+.benefits{
+margin-top:12px;
+background:rgba(255,255,255,.05);
+border-radius:10px;
+padding:10px;
+}
+.benefits div{
+color:rgba(255,255,255,.85);
+font-size:10px;
+padding:3px 0;
+}
+.cta{
+margin-top:12px;
+background:linear-gradient(135deg,#25D366,#128C7E);
+border-radius:10px;
+padding:12px;
+text-align:center;
+}
+.cta p{
+color:white;
+font-size:11px;
+margin-bottom:8px;
+}
+.cta a{
+display:inline-block;
+background:white;
+color:#128C7E;
+padding:9px 18px;
+border-radius:18px;
+text-decoration:none;
+font-size:11px;
+font-weight:700;
+}
+.rst{
+background:transparent;
+border:1px solid rgba(255,255,255,.2);
+color:rgba(255,255,255,.5);
+margin-top:10px;
+width:100%;
+padding:7px;
+border-radius:8px;
+cursor:pointer;
+font-size:10px;
+}
+.typing{
+display:flex;
+gap:3px;
+padding:7px 10px;
+background:#202c33;
+border-radius:10px;
+width:fit-content;
+margin-bottom:5px;
+}
+.typing span{
+width:5px;
+height:5px;
+background:#667;
+border-radius:50%;
+animation:bounce 1s infinite;
+}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.car-card{
+background:#1a2634;
+border-radius:8px;
+padding:8px;
+margin-top:5px;
+border:1px solid #2a3a4a;
+}
+.car-card img{
+width:100%;
+height:80px;
+object-fit:cover;
+border-radius:4px;
+background:#0d1520;
+}
+.car-card .car-info{
+margin-top:6px;
+}
+.car-card .car-name{
+font-weight:600;
+color:#e8d5a3;
+font-size:11px;
+}
+.car-card .car-price{
+color:#00d26a;
+font-size:12px;
+font-weight:700;
+margin-top:2px;
+}
+.car-card .car-specs{
+font-size:9px;
+color:#8696a0;
+margin-top:3px;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div class="hero">
+<h1>🚗 Mirá cómo este bot vende vehículos 24/7</h1>
+<p>Probá escribiendo como si fueras un cliente interesado</p>
+</div>
+<div class="phone">
+<div class="screen">
+<div class="header">
+<div class="avatar">🚗</div>
+<div class="info"><h3>AutoElite</h3><p>en línea</p></div>
+</div>
+<div class="messages" id="chat"></div>
+<div class="input-area">
+<input type="text" id="input" placeholder="Escribí algo..." onkeydown="if(event.key==='Enter')send()">
+<button onclick="send()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+</div>
+</div>
+</div>
+<div class="quick">
+<button class="qbtn" onclick="q('Hola')">Saludar</button>
+<button class="qbtn" onclick="q('Qué vehículos tienen?')">Ver stock</button>
+<button class="qbtn" onclick="q('Busco una SUV')">Buscar SUV</button>
+<button class="qbtn" onclick="elegirAuto()">Elegir</button>
+<button class="qbtn" onclick="q('Me interesa')">Confirmar</button>
+<button class="qbtn" onclick="q('Tienen otro?')">Ver otro</button>
+<button class="qbtn" onclick="q('Quiero agendar')">Agendar</button>
+<button class="qbtn" onclick="q('Donde quedamos?')">Retomar</button>
+</div>
+<div class="benefits">
+<div>✅ Atiende consultas 24/7 automáticamente</div>
+<div>✅ Muestra fotos, specs y precios al instante</div>
+<div>✅ Agenda test drives y visitas</div>
+<div>✅ Califica leads y notifica a vendedores</div>
+</div>
+<div class="cta">
+<p><strong>¿Querés uno para tu concesionaria?</strong></p>
+<a href="https://wa.me/595992954169?text=Hola!%20Vi%20el%20demo%20del%20bot%20para%20concesionaria%20y%20me%20interesa" target="_blank">💬 Hablemos por WhatsApp</a>
+</div>
+<button class="rst" onclick="reset()">🔄 Reiniciar demo</button>
+</div>
+<script>
+// ============================================
+// CATÁLOGO DE VEHÍCULOS
+// ============================================
+var CAT = {
+    sedanes: [
+        {id:'s1', nombre:'Toyota Corolla', año:2024, km:0, combustible:'Nafta', transmision:'Automático', colores:['blanco','gris','negro','rojo'], precio:145000000, cuota:3200000, tipo:'nuevo'},
+        {id:'s2', nombre:'Honda Civic', año:2023, km:15000, combustible:'Nafta', transmision:'Automático', colores:['negro','blanco','azul'], precio:135000000, cuota:2900000, tipo:'seminuevo'},
+        {id:'s3', nombre:'Volkswagen Virtus', año:2024, km:0, combustible:'Nafta', transmision:'Manual', colores:['blanco','plata','rojo'], precio:125000000, cuota:2700000, tipo:'nuevo'}
+    ],
+    suvs: [
+        {id:'u1', nombre:'Toyota RAV4', año:2024, km:0, combustible:'Híbrido', transmision:'Automático', colores:['blanco','negro','gris','azul'], precio:245000000, cuota:5400000, tipo:'nuevo'},
+        {id:'u2', nombre:'Hyundai Tucson', año:2023, km:22000, combustible:'Nafta', transmision:'Automático', colores:['blanco','negro','bordo'], precio:185000000, cuota:4000000, tipo:'seminuevo'},
+        {id:'u3', nombre:'Jeep Compass', año:2024, km:0, combustible:'Diesel', transmision:'Automático', colores:['negro','blanco','verde'], precio:225000000, cuota:4900000, tipo:'nuevo'},
+        {id:'u4', nombre:'Kia Sportage', año:2022, km:35000, combustible:'Nafta', transmision:'Automático', colores:['gris','negro'], precio:165000000, cuota:3600000, tipo:'seminuevo'}
+    ],
+    pickups: [
+        {id:'p1', nombre:'Toyota Hilux', año:2024, km:0, combustible:'Diesel', transmision:'Automático', colores:['blanco','negro','gris','rojo'], precio:285000000, cuota:6200000, tipo:'nuevo'},
+        {id:'p2', nombre:'Ford Ranger', año:2023, km:18000, combustible:'Diesel', transmision:'Automático', colores:['negro','blanco','azul'], precio:255000000, cuota:5500000, tipo:'seminuevo'},
+        {id:'p3', nombre:'Volkswagen Amarok', año:2024, km:0, combustible:'Diesel', transmision:'Automático', colores:['negro','blanco','gris'], precio:295000000, cuota:6400000, tipo:'nuevo'}
+    ],
+    hatches: [
+        {id:'h1', nombre:'Volkswagen Polo', año:2024, km:0, combustible:'Nafta', transmision:'Manual', colores:['blanco','rojo','azul','gris'], precio:95000000, cuota:2100000, tipo:'nuevo'},
+        {id:'h2', nombre:'Chevrolet Onix', año:2023, km:12000, combustible:'Nafta', transmision:'Automático', colores:['blanco','negro','rojo'], precio:85000000, cuota:1850000, tipo:'seminuevo'},
+        {id:'h3', nombre:'Fiat Argo', año:2024, km:0, combustible:'Nafta', transmision:'Manual', colores:['blanco','rojo','negro'], precio:78000000, cuota:1700000, tipo:'nuevo'}
+    ],
+    premium: [
+        {id:'pr1', nombre:'BMW X3', año:2023, km:8000, combustible:'Nafta', transmision:'Automático', colores:['negro','blanco','azul'], precio:385000000, cuota:8400000, tipo:'seminuevo'},
+        {id:'pr2', nombre:'Mercedes GLC', año:2024, km:0, combustible:'Híbrido', transmision:'Automático', colores:['negro','blanco','gris'], precio:425000000, cuota:9200000, tipo:'nuevo'},
+        {id:'pr3', nombre:'Audi Q5', año:2022, km:25000, combustible:'Nafta', transmision:'Automático', colores:['negro','gris'], precio:345000000, cuota:7500000, tipo:'seminuevo'}
+    ]
+};
+
+var MARCAS_CONOCIDAS = ['toyota','honda','volkswagen','vw','ford','chevrolet','hyundai','kia','jeep','fiat','bmw','mercedes','audi','nissan','mazda','mitsubishi','renault','peugeot'];
+
+// ============================================
+// ESTADO DE LA CONVERSACIÓN
+// ============================================
+var S = {
+    nombre: null,
+    telefono: null,
+    saludado: false,
+    vehiculoActual: null,
+    colorElegido: null,
+    interesados: [],
+    esperando: null,
+    fechaVisita: null,
+    presupuesto: null,
+    financiacion: false
+};
+
+// ============================================
+// UTILIDADES
+// ============================================
+function fmt(n) {
+    return n.toLocaleString('es-PY') + ' Gs';
+}
+
+function fmtCorto(n) {
+    if (n >= 1000000000) return Math.round(n/1000000000) + ' mil M';
+    if (n >= 1000000) return Math.round(n/1000000) + ' M';
+    return n.toLocaleString('es-PY');
+}
+
+function pick(a) {
+    return a[Math.floor(Math.random() * a.length)];
+}
+
+function norm(c) {
+    if (!c) return null;
+    var m = {
+        'blancos':'blanco','negros':'negro','grises':'gris',
+        'rojos':'rojo','azules':'azul','plata':'gris'
+    };
+    return m[c.toLowerCase()] || c.toLowerCase();
+}
+
+function findColor(v, c) {
+    if (!v || !c) return null;
+    var n = norm(c);
+    for (var i = 0; i < v.colores.length; i++) {
+        if (norm(v.colores[i]) === n) return v.colores[i];
+    }
+    return null;
+}
+
+function randVehiculo(cat, excluir) {
+    var lista = [];
+    for (var i = 0; i < CAT[cat].length; i++) {
+        if (!excluir || CAT[cat][i].id !== excluir) lista.push(CAT[cat][i]);
+    }
+    if (lista.length === 0) return CAT[cat][0];
+    return lista[Math.floor(Math.random() * lista.length)];
+}
+
+function getCatActual() {
+    if (!S.vehiculoActual) return null;
+    for (var cat in CAT) {
+        for (var i = 0; i < CAT[cat].length; i++) {
+            if (CAT[cat][i].id === S.vehiculoActual.id) return cat;
+        }
+    }
+    return null;
+}
+
+function buscarPorMarca(marca) {
+    marca = marca.toLowerCase();
+    if (marca === 'vw') marca = 'volkswagen';
+    for (var cat in CAT) {
+        for (var i = 0; i < CAT[cat].length; i++) {
+            if (CAT[cat][i].nombre.toLowerCase().indexOf(marca) >= 0) {
+                return {vehiculo: CAT[cat][i], categoria: cat};
+            }
+        }
+    }
+    return null;
+}
+
+function buscarPorPresupuesto(max) {
+    var encontrados = [];
+    for (var cat in CAT) {
+        for (var i = 0; i < CAT[cat].length; i++) {
+            if (CAT[cat][i].precio <= max) {
+                encontrados.push({vehiculo: CAT[cat][i], categoria: cat});
+            }
+        }
+    }
+    if (encontrados.length === 0) return null;
+    return encontrados[Math.floor(Math.random() * encontrados.length)];
+}
+
+// ============================================
+// PARSER DE MENSAJES
+// ============================================
+function parse(t) {
+    t = t.toLowerCase();
+    var r = {
+        categorias: [],
+        color: null,
+        marca: null,
+        presupuesto: null,
+        saludo: false,
+        catalogo: false,
+        interesa: false,
+        quiereOtro: false,
+        dondeQuedamos: false,
+        financiacion: false,
+        testDrive: false,
+        agendar: false,
+        ubicacion: false,
+        horario: false,
+        fecha: null,
+        datos: null,
+        usado: false,
+        nuevo: false
+    };
+
+    // Categorías
+    if (/sedan|corolla|civic|virtus/.test(t)) r.categorias.push('sedanes');
+    if (/suv|camioneta(?! pickup)|rav4|tucson|compass|sportage/.test(t)) r.categorias.push('suvs');
+    if (/pickup|hilux|ranger|amarok|camioneta.*pickup/.test(t)) r.categorias.push('pickups');
+    if (/hatch|compacto|polo|onix|argo|chico/.test(t)) r.categorias.push('hatches');
+    if (/premium|lujo|bmw|mercedes|audi|gama alta/.test(t)) r.categorias.push('premium');
+
+    // Color
+    var cm = t.match(/(blanco|negro|gris|rojo|azul|plata|verde|bordo)/i);
+    if (cm) r.color = norm(cm[1]);
+
+    // Marca
+    for (var i = 0; i < MARCAS_CONOCIDAS.length; i++) {
+        if (t.indexOf(MARCAS_CONOCIDAS[i]) >= 0) {
+            r.marca = MARCAS_CONOCIDAS[i];
+            break;
+        }
+    }
+
+    // Presupuesto
+    var pm = t.match(/(\d+)\s*(millones?|m\b|palos?)/i);
+    if (pm) r.presupuesto = parseInt(pm[1]) * 1000000;
+    var pm2 = t.match(/hasta\s*(\d+)/i);
+    if (pm2 && !r.presupuesto) r.presupuesto = parseInt(pm2[1]) * 1000000;
+
+    // Intenciones
+    r.saludo = /^(hola|buenas|buen dia|hey|buenos)[!,.\s]*$/i.test(t) || /^hola[,\s]/i.test(t);
+    r.catalogo = /qu[eé].*(tienen|hay|tenes|venden)|ver.*stock|mostrame|catalogo|vehiculos/.test(t);
+    r.interesa = /^(si|sí|dale|ok|va|bueno|listo|me interesa|ese|esa|perfecto|quiero)[!.\s]*$/i.test(t) || /me gusta|lo quiero|la quiero/.test(t);
+    r.quiereOtro = /otro|otra|diferente|más opciones|hay más|tienen más|ver otro|mostrame otro/.test(t);
+    r.dondeQuedamos = /donde quedamos|en qué estábamos|en que estabamos|qué estaba|que estaba|seguimos|continuar|retomar/.test(t);
+    r.financiacion = /financ|cuota|credito|crédito|plan|pago/.test(t);
+    r.testDrive = /test.?drive|probar|prueba|manejo/.test(t);
+    r.agendar = /agendar|visita|ir a ver|verlo|conocer|cita|turno|reserv/.test(t);
+    r.ubicacion = /donde.*est[aá]n|direcci[oó]n|ubicaci[oó]n|llegar/.test(t);
+    r.horario = /horario|abren|cierran|atienden/.test(t);
+    r.usado = /usado|seminuevo|segunda/.test(t);
+    r.nuevo = /\b0.?km|nuevo|sin uso/.test(t);
+
+    // Fecha
+    var fm = t.match(/(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|mañana|hoy|pasado)/i);
+    if (fm) r.fecha = fm[1].toLowerCase();
+
+    // Datos personales
+    var dm = t.match(/(?:soy\s+)?([a-záéíóúñ]{2,})\s+(\d{7,})/i);
+    if (dm) r.datos = {nombre: dm[1], telefono: dm[2]};
+    var dm2 = t.match(/(\d{10})/);
+    if (dm2 && !r.datos) {
+        var nm = t.match(/([a-záéíóúñ]{3,})/i);
+        if (nm) r.datos = {nombre: nm[1], telefono: dm2[1]};
+    }
+
+    return r;
+}
+
+// ============================================
+// MOSTRAR VEHÍCULO
+// ============================================
+function mostrarVehiculo(v, pre) {
+    S.vehiculoActual = v;
+    S.colorElegido = null;
+    S.esperando = 'interes';
+    
+    var estado = v.tipo === 'nuevo' ? '🆕 0 KM' : '✅ ' + v.km.toLocaleString() + ' km';
+    var txt = (pre || '') + '🚗 *' + v.nombre + ' ' + v.año + '*\n';
+    txt += estado + ' | ' + v.combustible + ' | ' + v.transmision + '\n';
+    txt += 'Colores: ' + v.colores.join(', ') + '\n\n';
+    txt += '💰 *' + fmt(v.precio) + '*\n';
+    txt += '📋 Cuota desde: ' + fmt(v.cuota) + '/mes\n\n';
+    txt += '¿Te interesa este modelo?';
+    
+    setTimeout(function() { mostrarTarjetaAuto(v); }, 300);
+    
+    return txt;
+}
+
+function mostrarTarjetaAuto(v) {
+    var c = document.getElementById('chat');
+    var d = document.createElement('div');
+    d.className = 'msg recv';
+    var imgUrl = 'https://placehold.co/300x120/1a2634/e8d5a3?text=' + encodeURIComponent(v.nombre.split(' ')[0]);
+    d.innerHTML = '<div class="car-card">' +
+        '<img src="' + imgUrl + '" alt="' + v.nombre + '">' +
+        '<div class="car-info">' +
+        '<div class="car-name">' + v.nombre + ' ' + v.año + '</div>' +
+        '<div class="car-price">' + fmt(v.precio) + '</div>' +
+        '<div class="car-specs">' + v.combustible + ' • ' + v.transmision + ' • ' + (v.km === 0 ? '0 KM' : v.km.toLocaleString() + ' km') + '</div>' +
+        '</div></div>';
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+// ============================================
+// RESPONDER
+// ============================================
+function resp(txt) {
+    var p = parse(txt);
+
+    // === DATOS PERSONALES ===
+    if (p.datos || S.esperando === 'datos') {
+        var dm = txt.match(/([a-záéíóúñ]{2,})\s*[,]?\s*(\d{7,})/i);
+        if (dm) {
+            S.nombre = dm[1].charAt(0).toUpperCase() + dm[1].slice(1);
+            S.telefono = dm[2];
+            S.esperando = 'fecha';
+            return '¡Perfecto ' + S.nombre + '! 📝\n\n¿Qué día te queda bien para venir a conocer el vehículo?\n\nAtendemos Lunes a Viernes 8:00-18:00 y Sábados 8:00-12:00';
+        }
+        return 'Pasame tu nombre y teléfono para agendarte.\nEj: Juan 0981234567';
+    }
+
+    // === FECHA DE VISITA ===
+    if (p.fecha || S.esperando === 'fecha') {
+        var fecha = p.fecha || txt.trim();
+        S.fechaVisita = fecha;
+        S.esperando = null;
+        
+        var v = S.vehiculoActual || (S.interesados.length > 0 ? S.interesados[0] : null);
+        var vehiculoTxt = v ? v.nombre : 'los vehículos que te interesan';
+        
+        var r = '✅ *¡Agendado!*\n\n';
+        r += '📅 ' + fecha.charAt(0).toUpperCase() + fecha.slice(1) + '\n';
+        r += '🚗 ' + vehiculoTxt + '\n';
+        r += '👤 ' + S.nombre + '\n';
+        r += '📱 ' + S.telefono + '\n\n';
+        r += '📍 Av. Mariscal López 3245, Asunción\n\n';
+        r += 'Un asesor te va a contactar para confirmar. ¡Te esperamos ' + S.nombre + '! 🤝';
+        
+        return r;
+    }
+
+    // === QUIERE AGENDAR ===
+    if (p.agendar || p.testDrive) {
+        if (!S.nombre) {
+            S.esperando = 'datos';
+            return '¡Genial! Para agendarte necesito algunos datos.\n\nPasame tu nombre y teléfono.\nEj: María 0991234567';
+        }
+        S.esperando = 'fecha';
+        return '¿Qué día te queda bien, ' + S.nombre + '?\n\nAtendemos Lunes a Viernes 8:00-18:00 y Sábados 8:00-12:00';
+    }
+
+    // === LE INTERESA EL VEHÍCULO ===
+    if (p.interesa && S.vehiculoActual) {
+        S.interesados.push(S.vehiculoActual);
+        
+        if (!p.color && S.vehiculoActual.colores.length > 1) {
+            S.esperando = 'color';
+            return '¡Excelente elección! 🎉\n\n¿Qué color preferís?\nDisponibles: ' + S.vehiculoActual.colores.join(', ');
+        }
+        
+        S.colorElegido = p.color || S.vehiculoActual.colores[0];
+        S.esperando = 'datos';
+        return '¡' + S.vehiculoActual.nombre + ' ' + S.colorElegido + '! Muy buena elección 👌\n\n¿Querés venir a verlo? Pasame tu nombre y teléfono para agendarte.\nEj: Carlos 0981234567';
+    }
+
+    // === ELIGIÓ COLOR ===
+    if (p.color && S.vehiculoActual && S.esperando === 'color') {
+        var vc = findColor(S.vehiculoActual, p.color);
+        if (vc) {
+            S.colorElegido = vc;
+            S.esperando = 'datos';
+            return '¡' + S.vehiculoActual.nombre + ' ' + vc + '! Excelente gusto 👌\n\nPasame tu nombre y teléfono para agendarte una visita.\nEj: María 0991234567';
+        }
+        return 'Ese color no está disponible.\nTenemos: ' + S.vehiculoActual.colores.join(', ') + '\n\n¿Cuál preferís?';
+    }
+
+    // === QUIERE VER OTRO ===
+    if (p.quiereOtro && S.vehiculoActual) {
+        var cat = getCatActual();
+        if (cat && CAT[cat].length > 1) {
+            var nuevo = randVehiculo(cat, S.vehiculoActual.id);
+            return mostrarVehiculo(nuevo, 'Te muestro otra opción:\n\n');
+        }
+        return 'Es el único que tengo en esa categoría.\n\n¿Te muestro otro tipo de vehículo? Tenemos sedanes, SUVs, pickups...';
+    }
+
+    // === DONDE QUEDAMOS ===
+    if (p.dondeQuedamos) {
+        if (S.esperando === 'datos') {
+            return 'Estábamos por agendar tu visita.\n\nPasame tu nombre y teléfono.\nEj: Juan 0981234567';
+        }
+        if (S.esperando === 'fecha') {
+            return 'Falta que me digas qué día podés venir, ' + S.nombre + '.\n\nAtendemos Lunes a Viernes 8:00-18:00 y Sábados 8:00-12:00';
+        }
+        if (S.esperando === 'color' && S.vehiculoActual) {
+            return 'Estábamos viendo el ' + S.vehiculoActual.nombre + '.\n\n¿Qué color preferís? Hay: ' + S.vehiculoActual.colores.join(', ');
+        }
+        if (S.vehiculoActual) {
+            return 'Te estaba mostrando el ' + S.vehiculoActual.nombre + ' ' + S.vehiculoActual.año + ', ' + fmt(S.vehiculoActual.precio) + '.\n\n¿Te interesa agendarte para verlo?';
+        }
+        if (S.interesados.length > 0) {
+            return 'Te habían interesado ' + S.interesados.length + ' vehículo(s).\n\n¿Querés agendar una visita o seguimos viendo?';
+        }
+        return 'Todavía no elegiste nada.\n\n¿Qué tipo de vehículo buscás? Tenemos sedanes, SUVs, pickups, hatches...';
+    }
+
+    // === FINANCIACIÓN ===
+    if (p.financiacion) {
+        S.financiacion = true;
+        var r = '💳 *Opciones de Financiación*\n\n';
+        r += '• Hasta 60 cuotas\n';
+        r += '• Entrada desde 20%\n';
+        r += '• Tasa preferencial\n';
+        r += '• Aprobación en 24hs\n\n';
+        if (S.vehiculoActual) {
+            r += 'El ' + S.vehiculoActual.nombre + ' en *' + fmt(S.vehiculoActual.cuota) + '/mes* aprox.\n\n';
+        }
+        r += '¿Querés que calculemos tu cuota?';
+        return r;
+    }
+
+    // === UBICACIÓN ===
+    if (p.ubicacion) {
+        return '📍 *Estamos en:*\nAv. Mariscal López 3245\nAsunción, Paraguay\n\n🗺️ A 2 cuadras del Shopping del Sol\n\n¿Te agendo una visita?';
+    }
+
+    // === HORARIO ===
+    if (p.horario) {
+        return '🕐 *Horarios de atención:*\n\nLunes a Viernes: 8:00 - 18:00\nSábados: 8:00 - 12:00\nDomingos: Cerrado\n\n¿Cuándo podés venir?';
+    }
+
+    // === CATÁLOGO GENERAL ===
+    if (p.catalogo) {
+        S.saludado = true;
+        return '🚗 *Nuestro Stock*\n\n' +
+            '• Sedanes (desde ' + fmtCorto(78000000) + ')\n' +
+            '• SUVs (desde ' + fmtCorto(165000000) + ')\n' +
+            '• Pickups (desde ' + fmtCorto(255000000) + ')\n' +
+            '• Hatches (desde ' + fmtCorto(78000000) + ')\n' +
+            '• Premium (desde ' + fmtCorto(345000000) + ')\n\n' +
+            '¿Qué tipo de vehículo te interesa?';
+    }
+
+    // === BUSCAR POR MARCA ===
+    if (p.marca && p.categorias.length === 0) {
+        var found = buscarPorMarca(p.marca);
+        if (found) {
+            S.saludado = true;
+            return mostrarVehiculo(found.vehiculo, 'Tenemos este ' + p.marca.charAt(0).toUpperCase() + p.marca.slice(1) + ':\n\n');
+        }
+        return 'No tenemos ' + p.marca + ' en stock actualmente.\n\n¿Te muestro otras marcas similares?';
+    }
+
+    // === BUSCAR POR PRESUPUESTO ===
+    if (p.presupuesto) {
+        S.presupuesto = p.presupuesto;
+        var found = buscarPorPresupuesto(p.presupuesto);
+        if (found) {
+            S.saludado = true;
+            return mostrarVehiculo(found.vehiculo, 'Con ese presupuesto te puedo ofrecer:\n\n');
+        }
+        return 'Con ' + fmtCorto(p.presupuesto) + ' no tenemos opciones.\n\nEl más económico está en ' + fmtCorto(78000000) + '.\n\n¿Te lo muestro?';
+    }
+
+    // === BUSCAR POR CATEGORÍA ===
+    if (p.categorias.length > 0) {
+        S.saludado = true;
+        var cat = p.categorias[0];
+        var vehiculo;
+        
+        // Filtrar por nuevo/usado si lo pidió
+        if (p.nuevo || p.usado) {
+            var tipo = p.nuevo ? 'nuevo' : 'seminuevo';
+            var filtrados = CAT[cat].filter(function(v) { return v.tipo === tipo; });
+            vehiculo = filtrados.length > 0 ? pick(filtrados) : randVehiculo(cat);
+        } else {
+            vehiculo = randVehiculo(cat);
+        }
+        
+        return mostrarVehiculo(vehiculo);
+    }
+
+    // === SALUDO ===
+    if (p.saludo) {
+        if (S.saludado) return '¿En qué te puedo ayudar?';
+        S.saludado = true;
+        return pick([
+            '¡Hola! 👋 Bienvenido a AutoElite.\n\n¿Qué tipo de vehículo estás buscando?',
+            '¡Buenas! Soy el asistente de AutoElite 🚗\n\n¿En qué te puedo ayudar hoy?',
+            '¡Hola! ¿Buscás auto nuevo o seminuevo?\n\nDecime qué tenés en mente 😊'
+        ]);
+    }
+
+    // === FALLBACKS ===
+    if (S.esperando === 'color' && S.vehiculoActual) {
+        return '¿Qué color preferís?\nDisponibles: ' + S.vehiculoActual.colores.join(', ');
+    }
+    if (S.esperando === 'interes' && S.vehiculoActual) {
+        return '¿Qué te parece el ' + S.vehiculoActual.nombre + '?\n\n¿Te interesa o te muestro otro?';
+    }
+
+    return 'No entendí bien 🤔\n\nPodés decirme:\n• Qué tipo de vehículo buscás\n• Tu presupuesto\n• "donde quedamos" para retomar\n\n¿En qué te ayudo?';
+}
+
+// ============================================
+// FUNCIONES DE UI
+// ============================================
+function addMsg(t, s) {
+    var c = document.getElementById('chat');
+    var d = document.createElement('div');
+    d.className = 'msg ' + (s ? 'sent' : 'recv');
+    var tm = new Date().toLocaleTimeString('es-PY', {hour: '2-digit', minute: '2-digit'});
+    d.innerHTML = t.replace(/\n/g, '<br>').replace(/\*([^*]+)\*/g, '<strong>$1</strong>') + '<div class="t">' + tm + '</div>';
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+function showTyping() {
+    var c = document.getElementById('chat');
+    var d = document.createElement('div');
+    d.id = 'typing';
+    d.className = 'typing';
+    d.innerHTML = '<span></span><span></span><span></span>';
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+function hideTyping() {
+    var t = document.getElementById('typing');
+    if (t) t.parentNode.removeChild(t);
+}
+
+function send() {
+    var i = document.getElementById('input');
+    var t = i.value.trim();
+    if (!t) return;
+    addMsg(t, true);
+    i.value = '';
+    showTyping();
+    setTimeout(function() {
+        hideTyping();
+        addMsg(resp(t), false);
+    }, 400 + Math.random() * 500);
+}
+
+function q(t) {
+    document.getElementById('input').value = t;
+    send();
+}
+
+function elegirAuto() {
+    if (!S.vehiculoActual) {
+        q('Busco una SUV');
+        return;
+    }
+    if (S.esperando === 'color') {
+        q(S.vehiculoActual.colores[0]);
+        return;
+    }
+    if (S.esperando === 'datos') {
+        q('Juan 0981555123');
+        return;
+    }
+    if (S.esperando === 'fecha') {
+        q('Mañana');
+        return;
+    }
+    q('Me interesa');
+}
+
+function reset() {
+    document.getElementById('chat').innerHTML = '';
+    S = {
+        nombre: null,
+        telefono: null,
+        saludado: false,
+        vehiculoActual: null,
+        colorElegido: null,
+        interesados: [],
+        esperando: null,
+        fechaVisita: null,
+        presupuesto: null,
+        financiacion: false
+    };
+}
+</script>
+</body>
+</html>
